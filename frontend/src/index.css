@@ -1,0 +1,76 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --base: #0A0A0F;
+  --surface: #111118;
+  --accent: #7C3AED;
+  --accent-2: #4F46E5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--base);
+  color: #F8FAFC;
+  font-family: Inter, sans-serif;
+}
+
+.mesh-bg {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.25), transparent 28%),
+    radial-gradient(circle at 80% 10%, rgba(79, 70, 229, 0.22), transparent 26%),
+    radial-gradient(circle at 55% 85%, rgba(245, 158, 11, 0.12), transparent 30%),
+    #0A0A0F;
+}
+
+.glass {
+  background: rgba(17, 17, 24, 0.72);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px);
+}
+
+.gradient-pill {
+  background: linear-gradient(135deg, #7C3AED, #4F46E5);
+}
+
+.input {
+  @apply w-full rounded-2xl border border-border bg-surface px-4 py-3 text-text outline-none transition;
+}
+
+.input:focus {
+  box-shadow: 0 0 0 2px #7C3AED;
+  border-color: #7C3AED;
+}
+
+.btn-primary {
+  @apply rounded-2xl px-5 py-3 font-bold text-white transition;
+  background: linear-gradient(135deg, #7C3AED, #4F46E5);
+}
+
+.btn-muted {
+  @apply rounded-2xl border border-border bg-white/5 px-4 py-2 text-sm text-muted hover:text-white;
+}
+
+.prose-custom h1 {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.prose-custom h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.prose-custom code {
+  font-family: "JetBrains Mono", monospace;
+  background: rgba(255,255,255,0.08);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
