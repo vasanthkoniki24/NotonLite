@@ -1,6 +1,6 @@
 Notion-Lite – Real-Time Collaborative Notes & Task Board
 
-A full-stack web application for real-time collaborative note editing, Kanban task management, and multi-user workspace interaction.
+A full-stack web application for real-time collaborative note editing, Kanban task management, and multi-user workspace interaction. Users can create notes, manage tasks, collaborate live, and receive real-time updates with role-based access control.
 
 ---
 
@@ -13,7 +13,7 @@ Backend
 - SQLAlchemy (Async)
 - Alembic
 - JWT Authentication
-- WebSockets
+- WebSockets (Real-time)
 
 Frontend
 
@@ -22,66 +22,145 @@ Frontend
 - React Query
 - Tailwind CSS
 - Framer Motion
-- @dnd-kit
+- @dnd-kit (Drag and Drop)
 
 ---
 
 Project Structure
 
+```
 notion-lite/
 ├── backend/
 │   ├── app/
-│   │   ├── api/v1/
+│   │   ├── api/
+│   │   │   └── v1/
+│   │   │       ├── auth.py
+│   │   │       ├── users.py
+│   │   │       ├── workspaces.py
+│   │   │       ├── notes.py
+│   │   │       ├── tasks.py
+│   │   │       ├── comments.py
+│   │   │       └── notifications.py
+│   │   │
 │   │   ├── core/
+│   │   │   ├── config.py
+│   │   │   ├── security.py
+│   │   │   └── dependencies.py
+│   │   │
 │   │   ├── db/
+│   │   │   ├── base.py
+│   │   │   ├── session.py
+│   │   │   └── init_db.py
+│   │   │
 │   │   ├── models/
+│   │   │   ├── user.py
+│   │   │   ├── workspace.py
+│   │   │   ├── note.py
+│   │   │   ├── note_version.py
+│   │   │   ├── task.py
+│   │   │   ├── comment.py
+│   │   │   └── notification.py
+│   │   │
 │   │   ├── schemas/
+│   │   │   ├── user.py
+│   │   │   ├── workspace.py
+│   │   │   ├── note.py
+│   │   │   ├── task.py
+│   │   │   ├── comment.py
+│   │   │   └── notification.py
+│   │   │
 │   │   ├── services/
+│   │   │   ├── auth_service.py
+│   │   │   ├── workspace_service.py
+│   │   │   ├── note_service.py
+│   │   │   ├── task_service.py
+│   │   │   ├── comment_service.py
+│   │   │   └── notification_service.py
+│   │   │
 │   │   ├── websockets/
+│   │   │   ├── manager.py
+│   │   │   ├── handlers.py
+│   │   │   └── routes.py
+│   │   │
 │   │   └── main.py
+│   │
 │   ├── alembic/
+│   │   ├── versions/
+│   │   ├── env.py
+│   │   └── script.py.mako
+│   │
 │   ├── alembic.ini
 │   ├── requirements.txt
 │   └── .env
 │
-├── frontend/
-│   ├── src/
-│   │   ├── api/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── store/
-│   │   ├── hooks/
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── package.json
-│   └── .env
-│
-└── docker-compose.yml
+└── frontend/
+    ├── src/
+    │   ├── api/
+    │   │   ├── axios.js
+    │   │   ├── authApi.js
+    │   │   ├── workspaceApi.js
+    │   │   ├── noteApi.js
+    │   │   ├── taskApi.js
+    │   │   ├── commentApi.js
+    │   │   └── notificationApi.js
+    │   │
+    │   ├── components/
+    │   │   ├── Sidebar.jsx
+    │   │   ├── Navbar.jsx
+    │   │   ├── TaskCard.jsx
+    │   │   └── NoteEditor.jsx
+    │   │
+    │   ├── pages/
+    │   │   ├── Login.jsx
+    │   │   ├── Register.jsx
+    │   │   ├── Dashboard.jsx
+    │   │   ├── Workspace.jsx
+    │   │   ├── Notes.jsx
+    │   │   ├── Kanban.jsx
+    │   │   └── Notifications.jsx
+    │   │
+    │   ├── store/
+    │   │   ├── authStore.js
+    │   │   └── workspaceStore.js
+    │   │
+    │   ├── hooks/
+    │   │   └── useSocket.js
+    │   │
+    │   ├── App.jsx
+    │   └── main.jsx
+    │
+    ├── package.json
+    └── .env
+    ```
 
 ---
 
 Docker Setup
 
-Clone
+1. Clone Repository
 
 git clone https://github.com/your-username/notion-lite.git
 cd notion-lite
 
-Run
+2. Run with Docker
 
 docker-compose up --build
 
-Services
+3. Services
 
 Service| URL
-Backend| http://localhost:9000
+Backend API| http://localhost:9000
 Frontend| http://localhost:5173
-Swagger| http://localhost:9000/docs
+Swagger Docs| http://localhost:9000/docs
 PostgreSQL| localhost:5432
 
-Stop
+4. Stop Containers
 
 docker-compose down
+
+5. Rebuild
+
+docker-compose up --build --force-recreate
 
 ---
 
@@ -89,45 +168,114 @@ API Endpoints
 
 Auth
 
-- POST /auth/register
-- POST /auth/login
-- GET /auth/me
+POST /auth/register
+
+- Register a new user
+- Auth Required: No
+
+POST /auth/login
+
+- Login and receive JWT token
+- Auth Required: No
+
+GET /auth/me
+
+- Get current user
+- Auth Required: Yes
+
+---
 
 Workspaces
 
-- POST /workspaces
-- GET /workspaces
-- GET /workspaces/{id}
-- POST /workspaces/{id}/invite
+POST /workspaces
+
+- Create workspace
+
+GET /workspaces
+
+- List user workspaces
+
+GET /workspaces/{id}
+
+- Get workspace details
+
+POST /workspaces/{id}/invite
+
+- Invite user (Owner only)
+
+---
 
 Notes
 
-- POST /notes
-- GET /notes/{workspace_id}
-- PATCH /notes/{id}
-- DELETE /notes/{id}
-- GET /notes/{id}/versions
+POST /notes
+
+- Create note
+
+GET /notes/{workspace_id}
+
+- List notes
+
+PATCH /notes/{id}
+
+- Update note
+
+DELETE /notes/{id}
+
+- Delete note
+
+GET /notes/{id}/versions
+
+- Get note history
+
+---
 
 Tasks
 
-- POST /tasks
-- GET /tasks/{workspace_id}
-- PATCH /tasks/{id}
-- DELETE /tasks/{id}
+POST /tasks
+
+- Create task
+
+GET /tasks/{workspace_id}
+
+- List tasks
+
+PATCH /tasks/{id}
+
+- Update task
+
+DELETE /tasks/{id}
+
+- Delete task
+
+---
 
 Comments
 
-- POST /comments
-- GET /comments/{task_id}
+POST /comments
+
+- Add comment
+
+GET /comments/{task_id}
+
+- Get comments
+
+---
 
 Notifications
 
-- GET /notifications
-- PATCH /notifications/{id}/read
+GET /notifications
+
+- Get user notifications
+
+PATCH /notifications/{id}/read
+
+- Mark as read
 
 ---
 
 WebSocket
+
+Endpoint:
 
 ws://localhost:9000/ws/workspaces/{workspace_id}
 
@@ -135,14 +283,14 @@ ws://localhost:9000/ws/workspaces/{workspace_id}
 
 Events
 
-- task_updated
-- note_updated
-- user_joined
-- user_left
+- task_updated → task created/updated/moved
+- note_updated → note edited
+- user_joined → user connected
+- user_left → user disconnected
 
 ---
 
-Roles
+Role-Based Access
 
 - Owner → Full access
 - Editor → Create & update
