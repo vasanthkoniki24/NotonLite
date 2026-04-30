@@ -28,11 +28,11 @@ Frontend
 
 Project Structure
 
-notion-lite
-├── backend
-│   ├── app
-│   │   ├── api
-│   │   │   └── v1
+notion-lite/
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   │   └── v1/
 │   │   │       ├── auth.py
 │   │   │       ├── users.py
 │   │   │       ├── workspaces.py
@@ -41,17 +41,17 @@ notion-lite
 │   │   │       ├── comments.py
 │   │   │       └── notifications.py
 │   │   │
-│   │   ├── core
+│   │   ├── core/
 │   │   │   ├── config.py
 │   │   │   ├── security.py
 │   │   │   └── dependencies.py
 │   │   │
-│   │   ├── db
+│   │   ├── db/
 │   │   │   ├── base.py
 │   │   │   ├── session.py
 │   │   │   └── init_db.py
 │   │   │
-│   │   ├── models
+│   │   ├── models/
 │   │   │   ├── user.py
 │   │   │   ├── workspace.py
 │   │   │   ├── note.py
@@ -60,7 +60,7 @@ notion-lite
 │   │   │   ├── comment.py
 │   │   │   └── notification.py
 │   │   │
-│   │   ├── schemas
+│   │   ├── schemas/
 │   │   │   ├── user.py
 │   │   │   ├── workspace.py
 │   │   │   ├── note.py
@@ -68,7 +68,7 @@ notion-lite
 │   │   │   ├── comment.py
 │   │   │   └── notification.py
 │   │   │
-│   │   ├── services
+│   │   ├── services/
 │   │   │   ├── auth_service.py
 │   │   │   ├── workspace_service.py
 │   │   │   ├── note_service.py
@@ -76,15 +76,15 @@ notion-lite
 │   │   │   ├── comment_service.py
 │   │   │   └── notification_service.py
 │   │   │
-│   │   ├── websockets
+│   │   ├── websockets/
 │   │   │   ├── manager.py
 │   │   │   ├── handlers.py
 │   │   │   └── routes.py
 │   │   │
 │   │   └── main.py
 │   │
-│   ├── alembic
-│   │   ├── versions
+│   ├── alembic/
+│   │   ├── versions/
 │   │   ├── env.py
 │   │   └── script.py.mako
 │   │
@@ -92,9 +92,9 @@ notion-lite
 │   ├── requirements.txt
 │   └── .env
 │
-└── frontend
-    ├── src
-    │   ├── api
+└── frontend/
+    ├── src/
+    │   ├── api/
     │   │   ├── axios.js
     │   │   ├── authApi.js
     │   │   ├── workspaceApi.js
@@ -103,13 +103,13 @@ notion-lite
     │   │   ├── commentApi.js
     │   │   └── notificationApi.js
     │   │
-    │   ├── components
+    │   ├── components/
     │   │   ├── Sidebar.jsx
     │   │   ├── Navbar.jsx
     │   │   ├── TaskCard.jsx
     │   │   └── NoteEditor.jsx
     │   │
-    │   ├── pages
+    │   ├── pages/
     │   │   ├── Login.jsx
     │   │   ├── Register.jsx
     │   │   ├── Dashboard.jsx
@@ -118,11 +118,11 @@ notion-lite
     │   │   ├── Kanban.jsx
     │   │   └── Notifications.jsx
     │   │
-    │   ├── store
+    │   ├── store/
     │   │   ├── authStore.js
     │   │   └── workspaceStore.js
     │   │
-    │   ├── hooks
+    │   ├── hooks/
     │   │   └── useSocket.js
     │   │
     │   ├── App.jsx
@@ -133,8 +133,6 @@ notion-lite
 
 ---
 
----
-
 Docker Setup
 
 1. Clone Repository
@@ -142,13 +140,9 @@ Docker Setup
 git clone https://github.com/your-username/notion-lite.git
 cd notion-lite
 
----
-
 2. Run with Docker
 
 docker-compose up --build
-
----
 
 3. Services
 
@@ -158,27 +152,13 @@ Frontend| http://localhost:5173
 Swagger Docs| http://localhost:9000/docs
 PostgreSQL| localhost:5432
 
----
-
 4. Stop Containers
 
 docker-compose down
 
----
-
-5. Rebuild (if needed)
+5. Rebuild
 
 docker-compose up --build --force-recreate
-
----
-
-Docker Architecture
-
-- backend → FastAPI app (port 9000)
-- frontend → React Vite app (port 5173)
-- postgres → Database (port 5432)
-
-All services communicate via Docker network.
 
 ---
 
@@ -208,22 +188,18 @@ Workspaces
 POST /workspaces
 
 - Create workspace
-- Auth Required: Yes
 
 GET /workspaces
 
 - List user workspaces
-- Auth Required: Yes
 
 GET /workspaces/{id}
 
 - Get workspace details
-- Auth Required: Yes
 
 POST /workspaces/{id}/invite
 
-- Invite user
-- Auth Required: Owner only
+- Invite user (Owner only)
 
 ---
 
@@ -232,27 +208,22 @@ Notes
 POST /notes
 
 - Create note
-- Auth Required: Editor/Owner
 
 GET /notes/{workspace_id}
 
 - List notes
-- Auth Required: Yes
 
 PATCH /notes/{id}
 
 - Update note
-- Auth Required: Editor/Owner
 
 DELETE /notes/{id}
 
 - Delete note
-- Auth Required: Owner only
 
 GET /notes/{id}/versions
 
 - Get note history
-- Auth Required: Yes
 
 ---
 
@@ -261,22 +232,18 @@ Tasks
 POST /tasks
 
 - Create task
-- Auth Required: Editor/Owner
 
 GET /tasks/{workspace_id}
 
 - List tasks
-- Auth Required: Yes
 
 PATCH /tasks/{id}
 
 - Update task
-- Auth Required: Editor/Owner
 
 DELETE /tasks/{id}
 
 - Delete task
-- Auth Required: Owner only
 
 ---
 
@@ -284,13 +251,11 @@ Comments
 
 POST /comments
 
-- Add comment to task
-- Auth Required: Yes
+- Add comment
 
 GET /comments/{task_id}
 
-- Get task comments
-- Auth Required: Yes
+- Get comments
 
 ---
 
@@ -299,12 +264,10 @@ Notifications
 GET /notifications
 
 - Get user notifications
-- Auth Required: Yes
 
 PATCH /notifications/{id}/read
 
-- Mark notification as read
-- Auth Required: Yes
+- Mark as read
 
 ---
 
@@ -327,8 +290,6 @@ Events
 
 Role-Based Access
 
-Owner → Full access
-Editor → Create & update
-Viewer → Read-only
-
----
+- Owner → Full access
+- Editor → Create & update
+- Viewer → Read-only
