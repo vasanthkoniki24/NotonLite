@@ -6,6 +6,7 @@ from app.core.dependencies import (
     get_current_user,
     require_workspace_access,
     require_editor_or_owner,
+    require_owner,
 )
 from app.database import get_db
 from app.models.note import Note
@@ -117,7 +118,9 @@ async def delete_existing_note(
     current_user: User = Depends(get_current_user),
 ):
     note = await get_note_or_404(db, note_id)
-    await require_editor_or_owner(db, note.workspace_id, current_user.id)
+
+    # Only workspace owner can delete note
+    await require_owner(db, note.workspace_id, current_user.id)
 
     workspace_id = note.workspace_id
 

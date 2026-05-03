@@ -6,6 +6,7 @@ from app.core.dependencies import (
     get_current_user,
     require_workspace_access,
     require_editor_or_owner,
+    require_owner,
 )
 from app.database import get_db
 from app.models.task import Task
@@ -123,7 +124,9 @@ async def delete_existing_task(
     current_user: User = Depends(get_current_user),
 ):
     task = await get_task_or_404(db, task_id)
-    await require_editor_or_owner(db, task.workspace_id, current_user.id)
+
+    # Only workspace owner can delete task
+    await require_owner(db, task.workspace_id, current_user.id)
 
     workspace_id = task.workspace_id
 
